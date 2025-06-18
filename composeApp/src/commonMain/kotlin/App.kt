@@ -118,23 +118,3 @@ fun App() {
         )
     }
 }
-
-fun Modifier.isPressed(
-    update: (Boolean) -> Unit,
-): Modifier {
-    return this.pointerInput(Unit) {
-        awaitEachGesture {
-            // 押されている間はtrue
-            while (
-                awaitPointerEvent().changes.any {
-                    it.pressed
-                }
-            ) {
-                update(true)
-            }
-
-            //　放されたらfalse
-            update(false)
-        }
-    }
-}
