@@ -1,5 +1,6 @@
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -69,24 +70,34 @@ fun App() {
             .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
-        LazyColumn(
-            modifier = Modifier.weight(1f)
-                .fillMaxWidth()
-                .frame(),
-            state = scrollState,
+        Box(
+            modifier = Modifier
+                .weight(1f),
         ) {
-            items(
-                List(50) { it + 1 }
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .frame(),
+                state = scrollState,
             ) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .frame(),
-                    textAlign = TextAlign.Center,
-                    text = "$it",
-                    fontSize = 50.sp
-                )
+                items(
+                    List(50) { it + 1 }
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .frame(),
+                        textAlign = TextAlign.Center,
+                        text = "$it",
+                        fontSize = 50.sp
+                    )
+                }
             }
+
+            ScrollBar(
+                modifier = Modifier.fillMaxSize(),
+                listState = scrollState,
+            )
         }
 
         Text(
