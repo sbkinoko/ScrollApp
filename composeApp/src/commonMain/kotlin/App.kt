@@ -72,7 +72,7 @@ fun App() {
         LazyColumn(
             modifier = Modifier.weight(1f)
                 .fillMaxWidth()
-                .padding(20.dp),
+                .frame(),
             state = scrollState,
         ) {
             items(
