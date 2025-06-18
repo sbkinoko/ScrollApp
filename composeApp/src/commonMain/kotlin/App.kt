@@ -92,18 +92,8 @@ fun App() {
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable {}
-                .pointerInput(Unit) {
-                    awaitEachGesture {
-                        while (
-                            awaitPointerEvent().changes.any {
-                                it.pressed
-                            }
-                        ) {
-                            isUpPressed = true
-                        }
-
-                        isUpPressed = false
-                    }
+                .isPressed {
+                    isUpPressed = it
                 },
             fontSize = 50.sp,
             textAlign = TextAlign.Center,
@@ -114,21 +104,31 @@ fun App() {
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { }
-                .pointerInput(Unit) {
-                    awaitEachGesture {
-                        while (
-                            awaitPointerEvent().changes.any {
-                                it.pressed
-                            }
-                        ) {
-                            isDownPressed = true
-                        }
-
-                        isDownPressed = false
-                    }
+                .isPressed {
+                    isDownPressed = it
                 },
             fontSize = 50.sp,
             textAlign = TextAlign.Center,
         )
+    }
+}
+
+fun Modifier.isPressed(
+    update: (Boolean) -> Unit,
+): Modifier {
+    return this.pointerInput(Unit) {
+        awaitEachGesture {
+            // 押されている間はtrue
+            while (
+                awaitPointerEvent().changes.any {
+                    it.pressed
+                }
+            ) {
+                update(true)
+            }
+
+            //　放されたらfalse
+            update(false)
+        }
     }
 }
