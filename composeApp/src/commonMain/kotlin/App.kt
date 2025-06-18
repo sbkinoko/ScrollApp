@@ -81,7 +81,9 @@ fun App() {
                 List(50) { it + 1 }
             ) {
                 Text(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .frame(),
                     textAlign = TextAlign.Center,
                     text = "$it",
                     fontSize = 50.sp
