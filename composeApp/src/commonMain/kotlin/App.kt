@@ -15,14 +15,17 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Preview
 fun App() {
     LazyColumn(
-        modifier = Modifier.fillMaxSize()
-            .padding(20.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .frame()
     ) {
         items(
-            List(50) { it +1 }
+            List(50) { it + 1 }
         ) {
             Text(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .frame(),
                 textAlign = TextAlign.Center,
                 text = "$it",
                 fontSize = 50.sp
