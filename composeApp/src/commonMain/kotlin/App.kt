@@ -66,8 +66,10 @@ fun App() {
     }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(20.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(20.dp),
+        verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         LazyColumn(
             modifier = Modifier.weight(1f)
@@ -91,6 +93,7 @@ fun App() {
             text = "↑",
             modifier = Modifier
                 .fillMaxWidth()
+                .frame()
                 .clickable {}
                 .isPressed {
                     isUpPressed = it
@@ -103,6 +106,7 @@ fun App() {
             text = "↓",
             modifier = Modifier
                 .fillMaxWidth()
+                .frame()
                 .clickable { }
                 .isPressed {
                     isDownPressed = it
