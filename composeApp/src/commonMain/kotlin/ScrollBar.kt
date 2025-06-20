@@ -4,6 +4,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Row
@@ -27,8 +28,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.math.max
-import kotlin.math.min
 
 
 private val scrollBarWidth = 10.dp
@@ -68,6 +67,10 @@ fun BoxScope.ScrollBar(
 
     var move by remember {
         mutableStateOf(0f)
+    }
+
+    LaunchedEffect(move) {
+        listState.scrollBy(move)
     }
 
     AnimatedVisibility(
@@ -115,15 +118,8 @@ fun BoxScope.ScrollBar(
                 modifier = Modifier
                     .padding(
                         top = with(density) {
-                            min(
-                                // スクロールバーの下部が切れないようにする
-                                height - scrollbarHeight,
-                                // 負数になると困るので0以上
-                                max(
-                                    0f,
-                                    scrollbarTopY1 + scrollbarTopOffset + move
-                                )
-                            ).toDp()
+                            (scrollbarTopY1 + scrollbarTopOffset)
+                                .toDp()
                         },
                     )
                     .height(with(density) { scrollbarHeight.toDp() })
@@ -147,9 +143,7 @@ fun BoxScope.ScrollBar(
                                 }
 
                                 // tap位置と最初のタップ位置の差だけ移動する
-                                move += eventList.last().position.y - first.position.y
-
-                                println(move)
+                                move = (eventList.last().position.y - first.position.y)
                             }
 
                             isPressed = false
