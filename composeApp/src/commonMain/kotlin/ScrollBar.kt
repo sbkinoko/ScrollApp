@@ -124,9 +124,14 @@ fun BoxScope.ScrollBar(
 
                             isPressed = true
 
-                            while (
-                                awaitPointerEvent().changes.any { it.pressed }
-                            ) {
+                            while (true) {
+                                val eventList = awaitPointerEvent().changes
+
+                                // リリースしていたら終了
+                                if (eventList.any { it.pressed }.not()) {
+                                    break
+                                }
+
                                 continue
                             }
 
