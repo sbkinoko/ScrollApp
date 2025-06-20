@@ -137,8 +137,9 @@ fun BoxScope.ScrollBar(
                             println(isPressed)
 
                             scope.launch {
+                                // 一定時間経過後
                                 delay(VisibleTime)
-                                //
+                                // 、触ってなければ非表示
                                 isVisible = isPressed
                             }
                         }
