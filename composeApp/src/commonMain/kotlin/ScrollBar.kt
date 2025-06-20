@@ -27,6 +27,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.math.max
+import kotlin.math.min
 
 
 private val scrollBarWidth = 10.dp
@@ -64,12 +66,15 @@ fun BoxScope.ScrollBar(
         mutableStateOf(0)
     }
 
+    var move by remember {
+        mutableStateOf(0f)
+    }
+
     AnimatedVisibility(
         visible = isVisible,
         enter = fadeIn(),
         exit = fadeOut(),
     ) {
-
         Row(
             modifier = modifier
                 .onGloballyPositioned {
@@ -110,7 +115,15 @@ fun BoxScope.ScrollBar(
                 modifier = Modifier
                     .padding(
                         top = with(density) {
-                            (scrollbarTopY1 + scrollbarTopOffset).toDp()
+                            min(
+                                // スクロールバーの下部が切れないようにする
+                                height - scrollbarHeight,
+                                // 負数になると困るので0以上
+                                max(
+                                    0f,
+                                    scrollbarTopY1 + scrollbarTopOffset + move
+                                )
+                            ).toDp()
                         },
                     )
                     .height(with(density) { scrollbarHeight.toDp() })
@@ -120,22 +133,27 @@ fun BoxScope.ScrollBar(
                     ).pointerInput(Unit) {
                         awaitEachGesture {
                             // 放すときも反応するのでタップ時だけ処理できるように入れる
-                            awaitFirstDown()
+                            val first = awaitFirstDown()
+                            move = 0f
 
                             isPressed = true
 
+
+
                             while (true) {
                                 val eventList = awaitPointerEvent().changes
-
-                                // リリースしていたら終了
-                                if (eventList.any { it.pressed }.not()) {
+                                if (eventList.all { it.pressed.not() }) {
                                     break
                                 }
 
-                                continue
+                                // tap位置と最初のタップ位置の差だけ移動する
+                                move += eventList.last().position.y - first.position.y
+
+                                println(move)
                             }
 
                             isPressed = false
+                            move = 0f
 
                             scope.launch {
                                 // 一定時間経過後
