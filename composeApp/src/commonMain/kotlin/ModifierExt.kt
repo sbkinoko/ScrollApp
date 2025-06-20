@@ -13,7 +13,8 @@ fun Modifier.frame(): Modifier {
 }
 
 fun Modifier.isPressed(
-    update: (Boolean) -> Unit,
+    buttonState: ButtonState,
+    update: (ButtonState) -> Unit,
 ): Modifier {
     return this.pointerInput(Unit) {
         awaitEachGesture {
@@ -23,11 +24,11 @@ fun Modifier.isPressed(
                     it.pressed
                 }
             ) {
-                update(true)
+                update(buttonState)
             }
 
             //　放されたらfalse
-            update(false)
+            update(ButtonState.None)
         }
     }
 }

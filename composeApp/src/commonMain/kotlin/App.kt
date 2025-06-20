@@ -25,39 +25,29 @@ import kotlin.math.max
 @Composable
 @Preview
 fun App() {
-
     val scrollState = rememberLazyListState()
 
     var isDownPressed by remember {
-        mutableStateOf(false)
+        mutableStateOf(ButtonState.None)
     }
 
-    var isUpPressed by remember {
-        mutableStateOf(false)
-    }
-
-    LaunchedEffect(Unit) {
+    LaunchedEffect(isDownPressed) {
         while (true) {
-            if (isDownPressed) {
-                scrollState.animateScrollToItem(
-                    scrollState.firstVisibleItemIndex + 1,
-                    0
-                )
-            }
-            delay(100)
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        while (true) {
-            if (isUpPressed) {
-                scrollState.animateScrollToItem(
+            when (isDownPressed) {
+                ButtonState.Up -> scrollState.animateScrollToItem(
                     max(
                         scrollState.firstVisibleItemIndex - 1,
                         0,
                     ),
                     0
                 )
+
+                ButtonState.Down -> scrollState.animateScrollToItem(
+                    scrollState.firstVisibleItemIndex + 1,
+                    0
+                )
+
+                ButtonState.None -> return@LaunchedEffect
             }
             delay(100)
         }
@@ -95,8 +85,10 @@ fun App() {
                 .fillMaxWidth()
                 .frame()
                 .clickable {}
-                .isPressed {
-                    isUpPressed = it
+                .isPressed(
+                    buttonState = ButtonState.Up
+                ) {
+                    isDownPressed = it
                 },
             fontSize = 50.sp,
             textAlign = TextAlign.Center,
@@ -108,7 +100,7 @@ fun App() {
                 .fillMaxWidth()
                 .frame()
                 .clickable { }
-                .isPressed {
+                .isPressed(buttonState = ButtonState.Down) {
                     isDownPressed = it
                 },
             fontSize = 50.sp,
