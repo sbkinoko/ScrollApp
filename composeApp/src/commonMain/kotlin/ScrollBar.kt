@@ -123,8 +123,6 @@ fun BoxScope.ScrollBar(
                             awaitFirstDown()
 
                             isPressed = true
-                            println("top")
-                            println(isPressed)
 
                             while (
                                 awaitPointerEvent().changes.any { it.pressed }
@@ -133,8 +131,6 @@ fun BoxScope.ScrollBar(
                             }
 
                             isPressed = false
-                            println("release")
-                            println(isPressed)
 
                             scope.launch {
                                 // 一定時間経過後
