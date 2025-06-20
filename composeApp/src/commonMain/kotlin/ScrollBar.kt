@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-
 private val scrollBarWidth = 10.dp
 
 const val VisibleTime = 800L
@@ -133,8 +132,6 @@ fun BoxScope.ScrollBar(
                             move = 0f
 
                             isPressed = true
-
-
 
                             while (true) {
                                 val eventList = awaitPointerEvent().changes
