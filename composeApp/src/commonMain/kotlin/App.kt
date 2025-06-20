@@ -32,24 +32,27 @@ fun App() {
     }
 
     LaunchedEffect(isDownPressed) {
+        val delayTime = 100L
+        var dif = 1
         while (true) {
             when (isDownPressed) {
                 ButtonState.Up -> scrollState.animateScrollToItem(
                     max(
-                        scrollState.firstVisibleItemIndex - 1,
+                        scrollState.firstVisibleItemIndex - dif,
                         0,
                     ),
                     0
                 )
 
                 ButtonState.Down -> scrollState.animateScrollToItem(
-                    scrollState.firstVisibleItemIndex + 1,
+                    scrollState.firstVisibleItemIndex + dif,
                     0
                 )
 
                 ButtonState.None -> return@LaunchedEffect
             }
-            delay(100)
+            delay(delayTime)
+            dif++
         }
     }
 
