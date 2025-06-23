@@ -25,6 +25,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.math.max
 
 
 private val scrollBarWidth = 10.dp
@@ -114,6 +115,21 @@ fun BoxScope.ScrollBar(
 
                                 if (eventList.any { it.pressed }.not()) {
                                     break
+                                }
+
+                                // tap位置がバーの真ん中になるようにする
+                                val tap = eventList.last().position.y -scrollbarHeight/2
+
+                                // タップ位置と描画領域の比率から表示アイテムを決定
+                                val target = (tap / viewHeight * listState.layoutInfo.totalItemsCount).toInt()
+
+                                scope.launch {
+                                    listState.scrollToItem(
+                                        max(
+                                            target,
+                                            0
+                                        )
+                                    )
                                 }
                             }
 
