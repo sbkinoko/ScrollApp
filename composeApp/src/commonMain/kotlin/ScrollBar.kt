@@ -112,6 +112,21 @@ fun BoxScope.ScrollBar(
                                 if (eventList.any { it.pressed }.not()) {
                                     break
                                 }
+
+                                // tap位置を取得
+                                val tap = eventList.last().position.y
+
+                                // タップ位置と描画領域の比率から表示アイテムを決定
+                                val target = (tap / viewHeight * listState.layoutInfo.totalItemsCount).toInt()
+
+                                scope.launch {
+                                    listState.scrollToItem(
+                                        max(
+                                            target,
+                                            0
+                                        )
+                                    )
+                                }
                             }
 
                             scope.launch {
