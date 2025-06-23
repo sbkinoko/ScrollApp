@@ -16,7 +16,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -82,7 +81,7 @@ fun App() {
                 state = scrollState,
             ) {
                 items(
-                    List(25) { it + 1 }
+                    List(50) { it + 1 }
                 ) {
                     Text(
                         modifier = Modifier
