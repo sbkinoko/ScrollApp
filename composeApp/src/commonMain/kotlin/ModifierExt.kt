@@ -18,13 +18,16 @@ fun Modifier.isPressed(
 ): Modifier {
     return this.pointerInput(Unit) {
         awaitEachGesture {
+            awaitPointerEvent()
+            update(buttonState)
+
             // 押されている間はtrue
             while (
                 awaitPointerEvent().changes.any {
                     it.pressed
                 }
             ) {
-                update(buttonState)
+               // なにもしない
             }
 
             //　放されたらfalse
