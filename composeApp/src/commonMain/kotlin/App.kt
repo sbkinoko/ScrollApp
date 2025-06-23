@@ -27,15 +27,15 @@ import kotlin.math.max
 fun App() {
     val scrollState = rememberLazyListState()
 
-    var isDownPressed by remember {
+    var isButtonPressed by remember {
         mutableStateOf(ButtonState.None)
     }
 
-    LaunchedEffect(isDownPressed) {
+    LaunchedEffect(isButtonPressed) {
         val delayTime = 100L
         var dif = 1
         while (true) {
-            when (isDownPressed) {
+            when (isButtonPressed) {
                 ButtonState.Up -> scrollState.animateScrollToItem(
                     max(
                         scrollState.firstVisibleItemIndex - dif,
@@ -91,7 +91,7 @@ fun App() {
                 .isPressed(
                     buttonState = ButtonState.Up
                 ) {
-                    isDownPressed = it
+                    isButtonPressed = it
                 },
             fontSize = 50.sp,
             textAlign = TextAlign.Center,
@@ -104,7 +104,7 @@ fun App() {
                 .frame()
                 .clickable { }
                 .isPressed(buttonState = ButtonState.Down) {
-                    isDownPressed = it
+                    isButtonPressed = it
                 },
             fontSize = 50.sp,
             textAlign = TextAlign.Center,
