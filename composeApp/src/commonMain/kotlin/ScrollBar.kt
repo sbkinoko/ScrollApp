@@ -117,8 +117,8 @@ fun BoxScope.ScrollBar(
                                     break
                                 }
 
-                                // tap位置を取得
-                                val tap = eventList.last().position.y
+                                // tap位置がバーの真ん中になるようにする
+                                val tap = eventList.last().position.y -scrollbarHeight/2
 
                                 // タップ位置と描画領域の比率から表示アイテムを決定
                                 val target = (tap / viewHeight * listState.layoutInfo.totalItemsCount).toInt()
