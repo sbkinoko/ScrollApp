@@ -43,9 +43,9 @@ fun BoxScope.ScrollBar(
     val scope = rememberCoroutineScope()
 
     val updateVisibility: suspend () -> Unit = {
-        isVisible = if(isAlwaysShowScrollBar || listState.isScrollInProgress || isPressed){
+        isVisible = if (isAlwaysShowScrollBar || listState.isScrollInProgress || isPressed) {
             true
-        }else {
+        } else {
             // 操作をやめてから800ms後に非表示にする
             delay(800)
             // 常に表示 or スクロール中　or tap中　は表示
