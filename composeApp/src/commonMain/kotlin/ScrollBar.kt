@@ -2,24 +2,30 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlin.math.max
 
 
 private val scrollBarWidth = 10.dp
@@ -31,14 +37,21 @@ fun BoxScope.ScrollBar(
     isAlwaysShowScrollBar: Boolean = false,
 ) {
     var isVisible by remember { mutableStateOf(isAlwaysShowScrollBar) }
+    var isPressed by remember {
+        mutableStateOf(false)
+    }
+
+    val scope = rememberCoroutineScope()
+
+    val updateVisibility: suspend () -> Unit = {
+        // スクロールが止まってから800ms後に非表示にする
+        delay(800)
+        // 常に表示 or スクロール中　or tap中　は表示
+        isVisible = isAlwaysShowScrollBar || listState.isScrollInProgress || isPressed
+    }
 
     LaunchedEffect(isAlwaysShowScrollBar, listState.isScrollInProgress) {
-        isVisible = if (isAlwaysShowScrollBar || listState.isScrollInProgress) {
-            true
-        } else {
-            delay(800) // スクロールが止まってから800ms後に非表示にする
-            false
-        }
+        updateVisibility.invoke()
     }
 
     var viewHeight by remember {
@@ -87,7 +100,29 @@ fun BoxScope.ScrollBar(
         ) {
             Canvas(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxHeight()
+                    .width(scrollBarWidth)
+                    .pointerInput(Unit) {
+                        awaitEachGesture {
+                            while (true) {
+                                val eventList = awaitPointerEvent().changes
+
+                                isPressed = true
+
+                                if (eventList.any { it.pressed }.not()) {
+                                    break
+                                }
+                            }
+
+                            scope.launch {
+                                // tap終了
+                                isPressed = false
+
+                                //表示切り替え
+                                updateVisibility.invoke()
+                            }
+                        }
+                    }
             ) {
                 drawRect(
                     color = Color.Gray,
