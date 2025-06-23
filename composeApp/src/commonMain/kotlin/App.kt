@@ -41,12 +41,10 @@ fun App() {
                         scrollState.firstVisibleItemIndex - dif,
                         0,
                     ),
-                    0
                 )
 
                 ButtonState.Down -> scrollState.animateScrollToItem(
                     scrollState.firstVisibleItemIndex + dif,
-                    0
                 )
 
                 ButtonState.None -> return@LaunchedEffect
