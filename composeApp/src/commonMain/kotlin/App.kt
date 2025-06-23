@@ -82,7 +82,7 @@ fun App() {
                 state = scrollState,
             ) {
                 items(
-                    List(50) { it + 1 }
+                    List(25) { it + 1 }
                 ) {
                     Text(
                         modifier = Modifier
