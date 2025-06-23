@@ -25,6 +25,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.math.max
 
 
 private val scrollBarWidth = 10.dp
@@ -43,9 +44,9 @@ fun BoxScope.ScrollBar(
     val scope = rememberCoroutineScope()
 
     val updateVisibility: suspend () -> Unit = {
-        isVisible = if(isAlwaysShowScrollBar || listState.isScrollInProgress || isPressed){
+        isVisible = if (isAlwaysShowScrollBar || listState.isScrollInProgress || isPressed) {
             true
-        }else {
+        } else {
             // 操作をやめてから800ms後に非表示にする
             delay(800)
             // 常に表示 or スクロール中　or tap中　は表示
